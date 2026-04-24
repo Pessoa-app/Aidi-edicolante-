@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>AIDI Edicolante — Napoli, dove sei finita?</title>
+
+
+
+  <!-- Google Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+  <!-- Stile CSS Integrato -->
+
+  <style>
+
+    /* ═══════════════════════════════════════════════════
+
+       AIDI EDICOLANTE — STILI CSS
+
+       ═══════════════════════════════════════════════════ */
+
+
+
+    /* ── 1. RESET & DESIGN TOKENS ───────────────────── */
+
+    *, *::before, *::after {
+
+      box-sizing: border-box;
+
+      margin: 0;
+
+      padding: 0;
+
+    }
+
+
+
+    :root {
+
+      --sky-hi:    #87D4FF;
+
+      --sky-lo:    #4AADEE;
+
+      --mt-far:    #C6D8E8;
+
+      --mt-mid:    #96B2CC;
+
+      --mt-near:   #A3BAD0;
+
+      --grass:     #5CC25C;
+
+      --grass-dk:  #4A9A4A;
+
+      --dirt:      #7B5E3A;
+
+      --white:     #FFFFFF;
+
+      --dark:      #1A1A2E;
+
+      --red:       #E63946;
+
+      --red-dk:    #B02A34;
+
+      --ff-px:     'Press Start 2P', monospace;
+
+      --ff-bd:     'Space Grotesk', sans-serif;
+
+      --card-sh:   5px 5px 0 rgba(26, 26, 46, .85);
+
+      --btn-sh-r:  4px 4px 0 var(--red-dk);
+
+    }
+
+
+
+    html, body {
+
+      height: 100%;
+
+      overflow: hidden;
+
+    }
+
+
+
+    body {
+
+      font-family: var(--ff-bd);
+
+      background: var(--sky-lo);
+
+    }
+
+
+
+    /* ── 2. PIXEL-ART BACKGROUND ────────────────────── */
+
+    .bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+    .bg__sky { position: absolute; inset: 0; background: linear-gradient(to bottom, var(--sky-hi) 0%, var(--sky-lo) 100%); }
+
+    .cloud { position: absolute; background: rgba(255, 255, 255, .82); border-radius: 3px; animation: drift linear infinite; }
+
+    .cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: inherit; }
+
+    .cloud-a { top: 7%; left: -60px; width: 52px; height: 13px; animation-duration: 28s; animation-delay: -6s; }
+
+    .cloud-a::before { width: 30px; height: 13px; top: -11px; left: 10px; }
+
+    .cloud-a::after { width: 16px; height: 9px; top: -7px; right: 6px; }
+
+    .cloud-b { top: 13%; left: -80px; width: 66px; height: 16px; animation-duration: 38s; animation-delay: -18s; }
+
+    .cloud-b::before { width: 38px; height: 16px; top: -13px; left: 12px; }
+
+    .cloud-b::after { width: 22px; height: 11px; top: -8px; left: 4px; }
+
+    .cloud-c { top: 4%; left: -50px; width: 42px; height: 10px; animation-duration: 32s; animation-delay: -25s; opacity: .7; }
+
+    .cloud-c::before { width: 22px; height: 10px; top: -8px; left: 8px; }
+
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 100px)); } }
+
+    .bg__mountains { position: absolute; bottom: 21%; left: 0; right: 0; width: 100%; height: 50%; }
+
+    .bg__ground-top { position: absolute; bottom: 21%; left: 0; right: 0; height: 10px; background: repeating-linear-gradient(90deg, var(--grass) 0, var(--grass) 16px, #70D070 16px, #70D070 32px); }
+
+    .bg__ground { position: absolute; bottom: 0; left: 0; right: 0; height: 21%; background: var(--grass-dk); }
+
+    .bg__ground::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%; background: var(--dirt); }
+
+    .tree { position: absolute; bottom: 21%; }
+
+    .tree__top { width: 0; height: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 20px solid #2E7D32; margin: 0 auto; }
+
+    .tree__trunk { width: 6px; height: 7px; background: #6D4C41; margin: 0 auto; }
+
+    .t1 { left: 4%; } .t2 { left: 11%; transform: scale(.75); } .t3 { right: 6%; } .t4 { right: 14%; transform: scale(.8); }
+
+
+
+    /* ── 3. SCROLLABLE APP WRAPPER ──────────────────── */
+
+    .app {
+
+      position: relative;
+
+      z-index: 1;
+
+      min-height: 100dvh;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      padding: 0 16px;
+
+      padding-top: max(24px, env(safe-area-inset-top)); 
+
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+
+      overflow-y: auto;
+
+      -webkit-overflow-scrolling: touch;
+
+    }
+
+
+
+    /* ── 4. HEADER ──────────────────────────────────── */
+
+    .header { width: 100%; max-width: 420px; display: flex; align-items: center; justify-content: center; padding: 8px 0 2px; flex-shrink: 0; }
+
+    .logo { font-family: var(--ff-px); font-size: 14px; color: var(--white); text-shadow: 2px 2px 0 var(--dark); letter-spacing: 4px; }
+
+
+
+    /* ── 5. GOAT MASCOT ─────────────────────────────── */
+
+    .goat-wrap {
+
+      width: 100%;
+
+      max-width: 420px;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: flex-end;
+
+      min-height: 140px; 
+
+      flex-shrink: 0;
+
+      position: relative;
+
+      z-index: 5;
+
+      margin-top: 10px;
+
+    }
+
+    .goat-img {
+
+      max-width: 160px;
+
+      max-height: 150px;
+
+      width: auto; height: auto; display: block;
+
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .20));
+
+      animation: goatFloat 3.6s ease-in-out infinite;
+
+      transform-origin: bottom center;
+
+      margin-bottom: -24px; 
+
+      position: relative;
+
+      z-index: 6;
+
+    }
+
+    @keyframes goatFloat {
+
+      0%   { transform: translateY(0px)   rotate(-1.5deg) scale(1);    }
+
+      30%  { transform: translateY(-9px)  rotate( 0.8deg) scale(1.02); }
+
+      65%  { transform: translateY(-4px)  rotate(-0.4deg) scale(1.01); }
+
+      100% { transform: translateY(0px)   rotate(-1.5deg) scale(1);    }
+
+    }
+
+
+
+    /* ── 6. CARD & NUOVA SEZIONE INTRO ──────────────── */
+
+    .card {
+
+      width: 100%; max-width: 420px;
+
+      background: var(--white); border: 3px solid var(--dark); border-radius: 22px;
+
+      box-shadow: var(--card-sh); padding: 36px 20px 22px; position: relative;
+
+      flex-shrink: 0; overflow: hidden;
+
+    }
+
+    .card::after {
+
+      content: ''; position: absolute; bottom: 0; left: 22px; right: 22px;
+
+      height: 4px; background: var(--red); border-radius: 0 0 3px 3px;
+
+    }
+
+
+
+    .intro-scroll {
+
+      max-height: 250px;
+
+      overflow-y: auto;
+
+      margin-bottom: 20px;
+
+      padding-right: 8px;
+
+    }
+
+    .intro-scroll::-webkit-scrollbar { width: 5px; }
+
+    .intro-scroll::-webkit-scrollbar-thumb { background: #DDDDE8; border-radius: 5px; }
+
+
+
+    .intro-text { font-size: 14px; line-height: 1.55; color: var(--dark); text-align: left; }
+
+    .intro-text strong { color: var(--red); font-weight: 700; }
+
+
+
+    /* ── 7. QUESTION HEADING ────────────────────────── */
+
+    .question { font-family: var(--ff-px); font-size: 11px; line-height: 2.1; text-align: center; color: var(--dark); text-transform: uppercase; margin-bottom: 18px; }
+
+    .question .red { color: var(--red); }
+
+
+
+    /* ── 8. TEXTAREA ────────────────────────────────── */
+
+    .field { position: relative; margin-bottom: 4px; }
+
+    textarea {
+
+      display: block; width: 100%; min-height: 108px; background: #F6F6F9; border: 2px solid #DDDDE8; border-radius: 14px;
+
+      padding: 14px; font-family: var(--ff-bd); font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--dark);
+
+      resize: none; outline: none; -webkit-appearance: none; transition: border-color .2s, box-shadow .2s, background .2s;
+
+    }
+
+    textarea::placeholder { color: #BABACF; }
+
+    textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230, 57, 70, .12); background: var(--white); }
+
+
+
+    /* ── 9. SUGGESTIONS ─────────────── */
+
+    .tips { position: relative; height: 32px; overflow: hidden; margin-bottom: 14px; }
+
+    .tip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 11.5px; font-style: italic; color: #9696AC; text-align: center; padding: 0 6px; line-height: 1.4; opacity: 0; transition: opacity .85s ease; pointer-events: none; }
+
+    .tip::before { content: '💡'; font-style: normal; font-size: 11px; flex-shrink: 0; }
+
+    .tip.on { opacity: 1; }
+
+
+
+    /* ── 10. BUTTONS ────────────────────────────────── */
+
+    .btn { display: block; width: 100%; padding: 15px 24px; border-radius: 50px; font-family: var(--ff-px); font-size: 10px; letter-spacing: 1px; text-align: center; text-transform: uppercase; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: transform .1s, box-shadow .1s; }
+
+    .btn:active { transform: translate(3px, 3px); }
+
+    .btn--red { background: var(--red); color: var(--white); border: 3px solid var(--red-dk); box-shadow: var(--btn-sh-r); margin-top: 4px; }
+
+    .btn--red:active { box-shadow: 1px 1px 0 var(--red-dk); }
+
+    .btn--ghost { background: transparent; color: #ABABBB; border: 2px solid #DDDDE8; box-shadow: 2px 2px 0 #DDDDE8; font-size: 8px; margin-top: 10px; letter-spacing: .5px; }
+
+    .btn--ghost:active { box-shadow: none; }
+
+
+
+    /* ── 11. SCREEN MANAGEMENT ────────── */
+
+    .screen { display: none; width: 100%; max-width: 420px; flex-direction: column; animation: slideIn .32s cubic-bezier(.25, .46, .45, .94); }
+
+    .screen.active { display: flex; }
+
+    @keyframes slideIn { from { opacity: 0; transform: translateX(36px); } to { opacity: 1; transform: translateX(0); } }
+
+
+
+    /* ── 12. SCREEN BADGE ───────────────────────────── */
+
+    .badge-screen { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 4px 0 8px; }
+
+    .mission-text { font-family: var(--ff-bd); font-size: 16px; font-weight: 500; line-height: 1.5; text-align: center; color: var(--dark); padding: 0 4px; margin-bottom: 25px; }
+
+    .badge-img { max-width: 180px; width: 100%; height: auto; display: block; margin: 0 auto 15px; animation: badgeDrop .6s cubic-bezier(.36, .07, .19, .97) both, badgeFloat 4s ease-in-out .7s infinite; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .28)); }
+
+    @keyframes badgeDrop { from { opacity: 0; transform: scale(.65) translateY(-16px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+    @keyframes badgeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+
+
+    /* ── 13. SCREEN EMAIL ───────────────────────────── */
+
+    .email-block { display: flex; flex-direction: column; gap: 0; }
+
+    .message-recap { font-size: 14px; font-weight: 500; line-height: 1.75; text-align: center; color: #575770; padding: 0 4px; margin-bottom: 18px; }
+
+    .message-recap strong { color: var(--dark); font-weight: 700; }
+
+    .email-label { font-family: var(--ff-px); font-size: 8px; text-align: center; color: #9696AC; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+    input[type="email"] { display: block; width: 100%; background: #F6F6F9; border: 2px solid #DDDDE8; border-radius: 14px; padding: 14px; font-family: var(--ff-bd); font-size: 15px; color: var(--dark); outline: none; -webkit-appearance: none; transition: border-color .2s, box-shadow .2s, background .2s; margin-bottom: 4px; }
+
+    input[type="email"]::placeholder { color: #BABACF; }
+
+    input[type="email"]:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230, 57, 70, .12); background: var(--white); }
+
+    input[type="email"].err { border-color: var(--red); animation: shake .4s ease; }
+
+
+
+    /* ── 14. SCREEN SUCCESS ─────────────────────────── */
+
+    .success-body { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 6px 0 4px; text-align: center; }
+
+    .success-burst { font-size: 52px; animation: popIn .55s cubic-bezier(.36, .07, .19, .97) both; }
+
+    @keyframes popIn { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 60% { transform: scale(1.25) rotate(5deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
+
+    .success-text { font-size: 14px; color: #575770; line-height: 1.75; font-weight: 500; }
+
+    .success-clock { font-family: var(--ff-px); font-size: 22px; color: var(--red); text-shadow: 2px 2px 0 rgba(176, 42, 52, .3); animation: tickPulse 1s ease-in-out infinite; }
+
+    @keyframes tickPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+
+
+
+    /* ── 15. UTILITIES ──────────────────────────────── */
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-7px); } 36% { transform: translateX(7px); } 54% { transform: translateX(-4px); } 72% { transform: translateX(4px); } }
+
+    .card.shake { animation: shake .42s ease; }
+
+
+
+    /* ── 16. RESPONSIVE TWEAKS ──────────────────────── */
+
+    @media (max-height: 620px) {
+
+      .goat-img  { max-width: 130px; max-height: 120px; margin-bottom: -18px; }
+
+      .goat-wrap { min-height: 120px; margin-top: 5px; }
+
+      .card      { padding: 28px 16px 18px; }
+
+      .intro-scroll { max-height: 200px; }
+
+      .question  { font-size: 10px; margin-bottom: 12px; }
+
+      textarea   { min-height: 88px; }
+
+      .badge-img { max-width: 140px; }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+
+<!-- ════════════════════════════════════════════════
+
+     PIXEL-ART BACKGROUND
+
+     ════════════════════════════════════════════════ -->
+
+<div class="bg" aria-hidden="true">
+
+  <div class="bg__sky"></div>
+
+  <div class="cloud cloud-a"></div>
+
+  <div class="cloud cloud-b"></div>
+
+  <div class="cloud cloud-c"></div>
+
+  <svg class="bg__mountains" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+
+    <polygon points="-20,220  70,55  160,220" fill="#C6D8E8"/>
+
+    <polygon points="  44,123  70,55   96,123" fill="rgba(255,255,255,.86)"/>
+
+    <polygon points="240,220 320,45  400,220" fill="#BCCDE0"/>
+
+    <polygon points=" 294,117 320,45  346,117" fill="rgba(255,255,255,.86)"/>
+
+    <polygon points="  10,220 150,18  290,220" fill="#96B2CC"/>
+
+    <polygon points=" 112,104 150,18  188,104" fill="rgba(255,255,255,.90)"/>
+
+    <polygon points=" 170,220 295,38  420,220" fill="#A3BAD0"/>
+
+    <polygon points=" 258,112 295,38  332,112" fill="rgba(255,255,255,.88)"/>
+
+  </svg>
+
+  <div class="bg__ground-top"></div>
+
+  <div class="bg__ground"></div>
+
+  <div class="tree t1"><div class="tree__top"></div><div class="tree__trunk"></div></div>
+
+  <div class="tree t2"><div class="tree__top"></div><div class="tree__trunk"></div></div>
+
+  <div class="tree t3"><div class="tree__top"></div><div class="tree__trunk"></div></div>
+
+  <div class="tree t4"><div class="tree__top"></div><div class="tree__trunk"></div></div>
+
+</div>
+
+
+
+<!-- ════════════════════════════════════════════════
+
+     APP
+
+     ════════════════════════════════════════════════ -->
+
+<div class="app" id="app">
+
+
+
+  <header class="header">
+
+    <span class="logo">AIDI</span>
+
+  </header>
+
+
+
+  <div class="goat-wrap">
+
+    <img class="goat-img" src="./capretta.png" alt="La Capretta AIDI" draggable="false">
+
+  </div>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 1 — INTRODUZIONE (NUOVA)
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen active" id="s1" aria-label="Schermata di benvenuto">
+
+    <div class="card" id="cardIntro">
+
+      <div class="intro-scroll">
+
+        <p class="intro-text">
+
+          Mi chiamo… vabbè, il nome cambia a seconda dell’aggiornamento, ma sono la <strong>capretta cyborg</strong> che lavora per AIDI. Sì, proprio lei: senza acca, con troppe domande aperte e zero risposte definitive.<br><br>
+
+          <strong>Tu scrivimi.</strong> Un pensiero, una scena, un ricordo. Io raccolgo tutto, senza giudizio, con una certa testardaggine da capra.<br><br>
+
+          Alle 18 in punto AIDI stampa l’edizione zero. E magari, tra le vostre parole, Napoli si lascia trovare.
+
+        </p>
+
+      </div>
+
+      <button class="btn btn--red" onclick="go(2)">INIZIAMO &rsaquo;</button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 2 — Napoli, dove sei finita?
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen" id="s2" aria-label="Prima domanda">
+
+    <div class="card" id="card1">
+
+      <h1 class="question">
+
+        NAPOLI,<br>
+
+        <span class="red">DOVE SEI FINITA?</span>
+
+      </h1>
+
+      <div class="field">
+
+        <textarea id="a1" placeholder="Scrivi qui la tua risposta..." rows="4"></textarea>
+
+      </div>
+
+      <div class="tips" id="tips1"></div>
+
+      <button class="btn btn--red" onclick="go(3)">AVANTI &rsaquo;</button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 3 — Perché?
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen" id="s3" aria-label="Seconda domanda">
+
+    <div class="card" id="card2">
+
+      <h1 class="question">
+
+        E <span class="red">PERCHÉ</span>?
+
+      </h1>
+
+      <div class="field">
+
+        <textarea id="a2" placeholder="Raccontaci di più..." rows="4"></textarea>
+
+      </div>
+
+      <div class="tips" id="tips2"></div>
+
+      <button class="btn btn--red" onclick="go(4)">AVANTI &rsaquo;</button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 4 — Badge
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen" id="s4" aria-label="Badge di partecipazione">
+
+    <div class="card">
+
+      <div class="badge-screen">
+
+        <p class="mission-text">
+
+         Grazie per aver presto parte alla nostra redazione urbana. Ecco il tuo badge: tienilo, vuol dire che ormai sei dei nostri.
+
+        </p>
+
+        <img class="badge-img" src="./badge.png" alt="Badge AIDI" draggable="false">
+
+      </div>
+
+      <button class="btn btn--red" onclick="go(5)">CONTINUA &rsaquo;</button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 5 — Email
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen" id="s5" aria-label="Lascia la tua email">
+
+    <div class="card">
+
+      <div class="email-block">
+
+        <p class="message-recap">
+
+          Alle 18:00 in punto esce la nostra prima edizione 0.<br>
+
+          <strong>Vuoi che te la inviamo o aspetti?</strong>
+
+        </p>
+
+        <p class="email-label">Lascia qui la tua email:</p>
+
+        <input type="email" id="emailInput" placeholder="la-tua@email.it" autocomplete="email">
+
+        <button class="btn btn--red" onclick="submitEmail()">
+
+          INVIAMI L'EDIZIONE 0 ✓
+
+        </button>
+
+        <button class="btn btn--ghost" onclick="go(6)">
+
+          Ci vediamo alle 18:00
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ─────────────────────────────────────────────
+
+       SCHERMATA 6 — Successo / Arrivederci
+
+       ───────────────────────────────────────────── -->
+
+  <section class="screen" id="s6" aria-label="Completato">
+
+    <div class="card">
+
+      <div class="success-body">
+
+        <span class="success-burst" aria-hidden="true">✨</span>
+
+        <h1 class="question">
+
+          A PRESTO!<br>
+
+          <span class="red">CI SIAMO.</span>
+
+        </h1>
+
+        <p class="success-text">
+
+          La sorpresa ti sta aspettando.<br>
+
+          Torna qui alle diciotto.<br>
+
+          L'edizione 0 è quasi pronta.
+
+        </p>
+
+        <div class="success-clock">18:00</div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+</div>
+
+
+
+<!-- Logica JS Integrata -->
+
+<script>
+
+  /* ═══════════════════════════════════════════════════
+
+     AIDI EDICOLANTE — LOGICA JAVASCRIPT
+
+     ═══════════════════════════════════════════════════ */
+
+
+
+  'use strict';
+
+
+
+  /* ── CONFIGURAZIONE GOOGLE SHEETS ─────────────────── */
+
+  // Il tuo URL definitivo di Google Script
+
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrzqRaz0lKgFMhsY5GX8hZ0067v4t6JdAitVI1HgnJxZhKJtYXztAIUVAIEVHVE4yJOA/exec";
+
+
+
+  /* ── SUGGESTION DATA ──────────────────────────────── */
+
+  const TIPS_DATA = {
+
+    tips1: [
+
+      'Tra i vicoli del centro storico...',
+
+      'Nei ricordi di mia nonna...',
+
+      'Sotto i tavolini dei bar...',
+
+      'Nel profumo del caffè la mattina...',
+
+      'Tra i colori del mercato...',
+
+      'Nel rumore di Spaccanapoli...',
+
+    ],
+
+    tips2: [
+
+      'Perché è cambiata troppo in fretta...',
+
+      'Perché non mi riconosco più nei suoi luoghi...',
+
+      'Perché le persone se ne vanno...',
+
+      'Perché sento che qualcosa si è perduto...',
+
+      'Perché la città appartiene a tutti...',
+
+      'Perché la amo nonostante tutto...',
+
+    ]
+
+  };
+
+
+
+  function initTips(containerId, items) {
+
+    const wrap = document.getElementById(containerId);
+
+    if (!wrap) return;
+
+
+
+    items.forEach((text, i) => {
+
+      const div = document.createElement('div');
+
+      div.className = 'tip' + (i === 0 ? ' on' : '');
+
+      div.textContent = text;
+
+      wrap.appendChild(div);
+
+    });
+
+
+
+    let current = 0;
+
+    setInterval(() => {
+
+      const nodes = wrap.querySelectorAll('.tip');
+
+      nodes[current].classList.remove('on');
+
+      current = (current + 1) % nodes.length;
+
+      nodes[current].classList.add('on');
+
+    }, 3300);
+
+  }
+
+
+
+  /* ── SCREEN NAVIGATION & SALVATAGGIO SILENZIOSO ───── */
+
+  let currentScreen = 1;
+
+
+
+  function go(n) {
+
+    // Validazione: Non fa andare avanti se i campi delle domande sono vuoti
+
+    if (n === 3 && !getVal('a1')) { triggerShake('card1', 'a1'); return; }
+
+    if (n === 4 && !getVal('a2')) { triggerShake('card2', 'a2'); return; }
+
+
+
+    // Salvataggio di background non appena le domande 1 e 2 sono compilate (passaggio schermata 4)
+
+    if (n === 4) {
+
+      inviaDatiInBackground('');
+
+    }
+
+
+
+    // Cambio schermata visivo
+
+    document.getElementById('s' + currentScreen).classList.remove('active');
+
+    document.getElementById('s' + n).classList.add('active');
+
+    currentScreen = n;
+
+
+
+    document.getElementById('app').scrollTo({ top: 0, behavior: 'instant' });
+
+  }
+
+
+
+  /* ── FUNZIONI DI INVIO DATI A GOOGLE SHEETS ───────── */
+
+
+
+  function inviaDatiInBackground(emailStr) {
+
+    if (!GOOGLE_SCRIPT_URL) return;
+
+    
+
+    const formData = new FormData();
+
+    formData.append('risposta1', getVal('a1'));
+
+    formData.append('risposta2', getVal('a2'));
+
+    formData.append('email', emailStr);
+
+
+
+    fetch(GOOGLE_SCRIPT_URL, { 
+
+      method: 'POST', 
+
+      mode: 'no-cors', 
+
+      body: formData 
+
+    }).catch(err => console.log("Errore invio silenzioso:", err));
+
+  }
+
+
+
+  function submitEmail() {
+
+    const inp = document.getElementById('emailInput');
+
+    const val = (inp.value || '').trim();
+
+    const valid = val.length > 4 && val.includes('@') && val.split('@')[1]?.includes('.');
+
+
+
+    if (!valid) {
+
+      inp.classList.add('err');
+
+      inp.focus();
+
+      setTimeout(() => inp.classList.remove('err'), 650);
+
+      return;
+
+    }
+
+
+
+    // Animazione bottone
+
+    const btn = document.querySelector('#s5 .btn--red');
+
+    btn.textContent = "INVIO IN CORSO... ⏳";
+
+    btn.style.pointerEvents = "none";
+
+    btn.style.opacity = "0.7";
+
+
+
+    if (!GOOGLE_SCRIPT_URL) {
+
+      setTimeout(() => go(6), 500);
+
+      return;
+
+    }
+
+
+
+    const formData = new FormData();
+
+    formData.append('risposta1', getVal('a1'));
+
+    formData.append('risposta2', getVal('a2'));
+
+    formData.append('email', val);
+
+
+
+    fetch(GOOGLE_SCRIPT_URL, { 
+
+      method: 'POST', 
+
+      mode: 'no-cors', 
+
+      body: formData 
+
+    })
+
+    .then(() => go(6)) // Va all'ultima schermata
+
+    .catch(error => {
+
+      alert("C'è stato un errore di connessione. Riprova.");
+
+      btn.textContent = "INVIAMI L'EDIZIONE 0 ✓";
+
+      btn.style.pointerEvents = "auto";
+
+      btn.style.opacity = "1";
+
+    });
+
+  }
+
+
+
+  /* ── HELPERS ──────────────────────────────────────── */
+
+  function getVal(id) {
+
+    const el = document.getElementById(id);
+
+    return el ? el.value.trim() : '';
+
+  }
+
+
+
+  function triggerShake(cardId, focusId) {
+
+    const card = document.getElementById(cardId);
+
+    if (!card) return;
+
+    card.classList.remove('shake');
+
+    void card.offsetWidth; 
+
+    card.classList.add('shake');
+
+    setTimeout(() => card.classList.remove('shake'), 450);
+
+    document.getElementById(focusId)?.focus();
+
+  }
+
+
+
+  /* ── KEYBOARD / VIEWPORT HANDLING ────────────────── */
+
+  if (window.visualViewport) {
+
+    window.visualViewport.addEventListener('resize', () => {
+
+      const focused = document.activeElement;
+
+      if (focused && (focused.tagName === 'TEXTAREA' || focused.tagName === 'INPUT')) {
+
+        setTimeout(
+
+          () => focused.scrollIntoView({ block: 'center', behavior: 'smooth' }),
+
+          80
+
+        );
+
+      }
+
+    });
+
+  }
+
+
+
+  /* ── BOOT ────────────────────────────────────────── */
+
+  initTips('tips1', TIPS_DATA.tips1);
+
+  initTips('tips2', TIPS_DATA.tips2);
+
+</script>
+
+</body>
+
+</html>
