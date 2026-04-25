@@ -172,7 +172,7 @@
 
       padding-top: max(24px, env(safe-area-inset-top)); 
 
-      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 50px));
 
       overflow-y: auto;
 
@@ -353,6 +353,68 @@
     .btn--ghost { background: transparent; color: #ABABBB; border: 2px solid #DDDDE8; box-shadow: 2px 2px 0 #DDDDE8; font-size: 8px; margin-top: 10px; letter-spacing: .5px; }
 
     .btn--ghost:active { box-shadow: none; }
+
+
+
+    /* ── 10b. POWERED BY FOOTER ─────────────────────── */
+
+    .powered-by {
+
+      position: fixed;
+
+      bottom: max(10px, env(safe-area-inset-bottom));
+
+      left: 0;
+
+      right: 0;
+
+      z-index: 100;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      padding: 6px 0;
+
+      pointer-events: none;
+
+      line-height: 1;
+
+    }
+
+    .powered-by span {
+
+      font-family: var(--ff-px);
+
+      font-size: 7px;
+
+      color: var(--white);
+
+      text-shadow: 2px 2px 0 var(--dark);
+
+      letter-spacing: 2px;
+
+      text-transform: uppercase;
+
+    }
+
+    .powered-by img {
+
+      height: 30px;
+
+      width: auto;
+
+      opacity: 0.85;
+
+      display: block;
+
+      filter: drop-shadow(2px 2px 0 var(--dark));
+
+    }
 
 
 
@@ -742,6 +804,16 @@ Se ti va di far parte di questa stramba redazione gialla per un giorno, allora c
     </div>
 
   </section>
+
+
+
+  <div class="powered-by">
+
+    <span>powered by</span>
+
+    <img src="logo_pessoa.svg" alt="Pessoa" />
+
+  </div>
 
 
 
